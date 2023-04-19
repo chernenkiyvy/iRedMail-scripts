@@ -1,5 +1,16 @@
-#!/bin/sh
-echo Looping on account credentials found in file.txt
+#!/bin/bash
+#
+# Author: 	chernenkiyvy
+# Website: 	kit.group
+# Purpose: 	Bulk migrate user from IMAP server to iRedmail.
+# License: 	free
+#
+# Run this script to bulk mirate mail user from other server.
+# Example usage: bash migrate-imap.sh
+#
+#Example CSV file: imap.old-server.org;username@old-server.org;old-server-password;imap.localhost;username@new-server.org;new-server-password
+
+echo Looping on account credentials found in user-to-migrate.txt
 echo
 
 { while IFS=';' read  h1 u1 p1 h2 u2 p2 fake
