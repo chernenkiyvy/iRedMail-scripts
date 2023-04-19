@@ -1,32 +1,24 @@
 #!/bin/bash
 #
-# Author: 	Daulton
-# Website: 	daulton.ca
-# Purpose: 	Updates the password for a user account in iRedmail.
+# Author: 	chernenkiyvy
+# Website: 	kit.group
+# Purpose: 	Bulk updates the password for a user account in iRedmail.
 # License: 	2-clause BSD license
 #
-# Note: You can also use this script to change hashing algorithms. If you made an account with SHA512 but actually wanted bcrypt you can change that by updating the password.
+# Run this script to generate SQL command used to bulk password user. Note run this script from the directory where generate_password_hash.py is.
+# Example usage: bash update-account-password-bulk.sh user_update_password.csv > update-account-password-bulk.sql
+#.
+# This will print SQL commands on the console directly and also it will save a SQL output file named.
+# update-account-password-bulk.sql in the scripts present directory.
 #
-# 1) First you must get the hashed password, use the following example. SSHA512 is recommended on Linux systems. BCRYPT is recommended on BSD systems.
-# SHA512: doveadm pw -s 'ssha512' -p '123456'
-# bcrypt: doveadm pw -s 'blf-crypt' -p '123456'
-#
-# 2) Next use the hash with this script to get the SQL required to update the specified user account. Note for bcrypt passwords surround the password with an apostrophe on each side.
-# sh update-account-password.sh jeff@example.com {SSHA512}ZJrxEEz44aTyd/srPRU3RH4zThW4PHFIDSGYyADEE/D3QUyrgWmiKHyajWN2SQA4+VAk6X5ePaqwbMQqqICj3BCnhYgc/SDc
-# 
-# This will print SQL commands on the console directly, you can redirect the
-# output to a file for further use like this:
-# 
-# bash update-account-password.sh jeff@example.com {SSHA512}ZJrxEEz44aTyd/srPRU3RH4zThW4PHFIDSGYyADEE/D3QUyrgWmiKHyajWN2SQA4+VAk6X5ePaqwbMQqqICj3BCnhYgc/SDc > output.sql
-#
-# Import output.sql into SQL database like below:
+# Import update-account-password-bulk.sql into SQL database like below:
 #
 # mysql -uroot -p
 # mysql> USE vmail;
-# mysql> SOURCE /path/to/output.sql;
+# mysql> SOURCE /path/to/update-account-password-bulk.sql;
 #
 # psql -U vmailadmin -d vmail
-# sql> \i /path/to/output.sql;
+# sql> \i /path/to/update-account-password-bulk.sql;
 
 # Password scheme. Available schemes: BCRYPT, SSHA512, SSHA, MD5, NTLM, PLAIN.
 # Check file Available
