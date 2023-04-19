@@ -4,7 +4,7 @@
 # Website: 		daulton.ca
 # Purpose: 		Create a new user account in iRedmail setup with an SQL backend.
 # License: 		2-clause BSD license
-# Note: 		The CSV file used must have the format of email address,full name,password. Example: jeff@example.com,Jeff Gretzky,12345678
+# Note: 		The CSV file used must have the format of email address,full name,password. Example: jeff@example.com,Jeff Gretzky,
 #
 # Usage:
 # Edit these variables:
@@ -37,10 +37,10 @@ STORAGE_BASE_DIRECTORY="/var/vmail/vmail1"
 #
 # Password scheme. Available schemes: BCRYPT, SSHA512, SSHA, MD5, NTLM, PLAIN.
 # Check file Available
-PASSWORD_SCHEME='BCRYPT'
+PASSWORD_SCHEME='PLAIN'
 
 # Default mail quota (in MB).
-DEFAULT_QUOTA='1024'
+DEFAULT_QUOTA='20480'
 
 # The default alias(es) you want all new mail accounts to be apart of. The aliases must first exist, and also adding the domain portion to the alias is unnecessary - see the example below.
 # Format example: ALIAS_ARRAY=("allcompany" "announcements" "alerts")
@@ -125,27 +125,27 @@ while read csv; do
 		
 		printf "\n"
 		printf "Create users maildir with the following command: \n"
-		printf "mkdir -p ${STORAGE_BASE_DIRECTORY}/${domain}/${str1}/${str2}/${str3}/${username}-${DATE}/ \n" | tee "$script_dir"/create-new-user-bulk-commands.txt
-		printf "chown -R vmail:vmail ${STORAGE_BASE_DIRECTORY}/${domain}/${str1}/ \n" | tee "$script_dir"/create-new-user-bulk-commands.txt
+		printf "mkdir -p ${STORAGE_BASE_DIRECTORY}/${domain}/${str1}/${str2}/${str3}/${username}-${DATE}/ \n" | tee -a "$script_dir"/create-new-user-bulk-commands.txt
+		printf "chown -R vmail:vmail ${STORAGE_BASE_DIRECTORY}/${domain}/${str1}/ \n" | tee -a "$script_dir"/create-new-user-bulk-commands.txt
 		printf "\n"
 	else
 		maildir="${domain}/${username}-${DATE}/"
 		printf "Create users maildir with the following command: \n"
-		printf "mkdir -p ${STORAGE_BASE_DIRECTORY}/${domain}/${username}-${DATE}/ \n" | tee "$script_dir"/create-new-user-bulk-commands.txt
-		printf "chown -R vmail:vmail ${STORAGE_BASE_DIRECTORY}/${domain}/${username}-${DATE}/ \n" | tee "$script_dir"/create-new-user-bulk-commands.txt
+		printf "mkdir -p ${STORAGE_BASE_DIRECTORY}/${domain}/${username}-${DATE}/ \n" | tee -a "$script_dir"/create-new-user-bulk-commands.txt
+		printf "chown -R vmail:vmail ${STORAGE_BASE_DIRECTORY}/${domain}/${username}-${DATE}/ \n" | tee -a "$script_dir"/create-new-user-bulk-commands.txt
 		printf "\n"
 	fi
 
 	printf "Create user via the following SQL statements: \n"
-	printf "INSERT INTO mailbox (username, password, name, storagebasedirectory,storagenode, maildir, quota, domain, active, passwordlastchange, created) VALUES ('${mail}', '${CRYPT_PASSWD}', '${full_name}', '${STORAGE_BASE}','${STORAGE_NODE}', '${maildir}', '${DEFAULT_QUOTA}', '${domain}', '1', NOW(), NOW());\n" | tee "$script_dir"/create-new-user-bulk.sql
-	printf "INSERT INTO forwardings (address, forwarding, domain, dest_domain, is_forwarding) VALUES ('${mail}', '${mail}','${domain}', '${domain}', 1); \n" | tee "$script_dir"/create-new-user-bulk.sql
+	printf "INSERT INTO mailbox (username, password, name, storagebasedirectory,storagenode, maildir, quota, domain, active, passwordlastchange, created) VALUES ('${mail}', '${CRYPT_PASSWD}', '${full_name}', '${STORAGE_BASE}','${STORAGE_NODE}', '${maildir}', '${DEFAULT_QUOTA}', '${domain}', '1', NOW(), NOW());\n" | tee -a -a "$script_dir"/create-new-user-bulk.sql
+	printf "INSERT INTO forwardings (address, forwarding, domain, dest_domain, is_forwarding) VALUES ('${mail}', '${mail}','${domain}', '${domain}', 1); \n" | tee -a -a "$script_dir"/create-new-user-bulk.sql
 
 	if [ ! -z "$ALIAS_ARRAY" ]; then
 		ALIAS_ARRAYLength=${#ALIAS_ARRAY[@]}
 		adjustedLength=$(( ALIAS_ARRAYLength - 1 ))
 
 		for i in $( eval echo {0..$adjustedLength} ); do
-			printf "INSERT INTO forwardings (address, forwarding, domain, dest_domain, active) VALUES '${ALIAS_ARRAY[$i]}@${domain}', '${mail}', '${domain}', '${domain}', 1); \n" | tee "$script_dir"/create-new-user-bulk.sql
+			printf "INSERT INTO forwardings (address, forwarding, domain, dest_domain, active) VALUES '${ALIAS_ARRAY[$i]}@${domain}', '${mail}', '${domain}', '${domain}', 1); \n" | tee -a -a "$script_dir"/create-new-user-bulk.sql
 		done
 	fi
 
@@ -153,4 +153,3 @@ while read csv; do
 
 	count=`expr $count + 1`
 done < "$1"
-
