@@ -12,12 +12,12 @@ There are scripts so far to do the following administrative functions:
 | User accounts |                                     |                                                                                                                                             |
 |               | create-new-user.sh                  | Creates a new user, with an optional feature of created users being a part of default aliases												|
 |               | create-new-user-bulk.sh             | Creates new users from a CSV file, with an optional feature of created users being a part of default aliases								|
-|               | update-account-password-bulk.sh             | Update password to users from a CSV file								|
 |				| add-domain-admin.sh				  | Makes an existing user into a domain admin, optionally can become a global admin - read the prompt										    |																							|
 |				| revoke-domain-admin.sh			  | Revokes a users domain administrator permission																								|
 |				| remove-domain-admin.sh			  | Remove a users entry entirely from the domain_admins table																					|
 |               | remove-user.sh                      | Delete a user                                                                                                                               |
 |               | update-account-password.sh          | Update a users password                                                                                                                     |
+|               | update-account-password-bulk.sh             | Update password to users from a CSV file								|
 |               | disable-user.sh                     | De-activate a user account                                                                                                                  |
 |               | enable-user.sh                      | Re-enables a disabled user account                                                                                                          |
 |               | list-active-accounts.sh             | List active user accounts                                                                                                                   |
